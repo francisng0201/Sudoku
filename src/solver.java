@@ -8,7 +8,11 @@ public class Solver {
 	 */
     public void solveSudoku(Sudoku sudoku){
     	int[][] board = sudoku.getBoard();
+        sudoku.print();
+
+    	System.out.println("solving");
         solve(board);
+        System.out.println("done");
         sudoku.setBoard(board);
     }
     
@@ -24,7 +28,6 @@ public class Solver {
     			if (board[i][j] != 0){
     				continue;
     			}
-    			
     			// solve sudoku recursively
     			for (int k = 0; k < Sudoku.LENGTH; k++){
     				board[i][j] = k + 1;

@@ -1,0 +1,4 @@
+0000000000000000000000000000000000000000 c83c89b231943df69217c302dcda4ccc30c0d0dc Francis Ng <cng10@illinois.edu> 1478134681 -0500	commit (initial): :lollipop: Added .gitattributes & .gitignore files
+c83c89b231943df69217c302dcda4ccc30c0d0dc 8cc99a235c9c2e7bf9d0d9397f10fdf4883aa94a Francis Ng <cng10@illinois.edu> 1478134970 -0500	commit: Add generator
+8cc99a235c9c2e7bf9d0d9397f10fdf4883aa94a 579aeb964c3ba2b70552e88e5980267d75c7a57d Francis Ng <cng10@illinois.edu> 1478135001 -0500	rebase finished: refs/heads/master onto aef162ca7157662ad5dad2e0f9aba01b1a22261a
+579aeb964c3ba2b70552e88e5980267d75c7a57d 0f4b86a1b060a778cfe1c54476c179df375ab35e Francis Ng <cng10@illinois.edu> 1478158616 -0500	commit: Added checker and solver

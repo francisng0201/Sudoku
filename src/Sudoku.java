@@ -35,16 +35,16 @@ public class Sudoku {
 			numbers[i] = tmp;
 		}
 
-		//generate recursive
+		//generate sudoku recursively
 		for (int i = 0; i < LENGTH; i++){
 			if (isLegal(x, y, numbers[i])){
 				board[x][y] = numbers[i];
-				if (x != 8){
+				if (x != LENGTH-1){
 					x++;
 				}
 				else{
 					//at the end of the board
-					if (y == 8){
+					if (y == LENGTH-1){
 						return true;
 					}
 					else{
@@ -52,7 +52,6 @@ public class Sudoku {
 						y++;
 					}
 				}
-				
 				if (putNumbers(x, y)){
 					return true;
 				}
@@ -67,7 +66,7 @@ public class Sudoku {
 	 * Check if the number put is valid
 	 * @param x horizon position of the number 
 	 * @param y vertical position of the number
-	 * @param number
+	 * @param number number being put to the box
 	 * @return true if valid, false otherwise
 	 */
 	protected boolean isLegal(int x, int y, int number){
@@ -110,12 +109,13 @@ public class Sudoku {
 	 * print out the sudoku
 	 */
 	public void print(){
-		for(int i = 0;i < LENGTH; i++){
+		for(int i = 0; i < LENGTH; i++){
 			for(int j = 0;j < LENGTH; j++){
 				System.out.print(board[i][j] + " ");
 			}
 			System.out.println();
 		}
+		System.out.println();
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class Sudoku {
 	 * @param y vertical position of the number
 	 */
 	public void setBoard(int value, int x, int y){
-		if (value > 9 || value < 1){
+		if (value > 9 || value < 0){
 			System.out.println("invalid number");
 			return;
 		}
@@ -146,5 +146,11 @@ public class Sudoku {
 			return;
 		}
 		this.board[x][y] = value;
+	}
+	
+	public static void main(String[] args){
+		Sudoku sudoku = new Sudoku();
+		sudoku.generate();
+		sudoku.print();
 	}
 }

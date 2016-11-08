@@ -4,6 +4,11 @@
  *
  */
 public class Checker {
+	/**
+	 * Check if a given sudoku is valid
+	 * @param sudoku 
+	 * @return true if valid, false otherwise
+	 */
 	public boolean isValidSudoku(Sudoku sudoku){
 		int[][] board = sudoku.getBoard();
 		
@@ -107,6 +112,7 @@ public class Checker {
 			System.out.println("invalid row or column");
 			return false;
 		}
+		
 		int[] oneGrid = new int[Sudoku.LENGTH];
 		int k = 0;
 		for(int i = 0; i < 3; i++){
