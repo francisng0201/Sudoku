@@ -1,0 +1,94 @@
+import java.util.*;
+
+public class Solver {
+	
+	/**
+	 * Solve a given sudoku
+	 * @param sudoku
+	 */
+    public void solveSudoku(Sudoku sudoku){
+    	int[][] board = sudoku.getBoard();
+        sudoku.print();
+
+    	System.out.println("solving");
+        solve(board);
+        System.out.println("done");
+        sudoku.setBoard(board);
+    }
+    
+    /**
+     * Solve the sudoku recursively, fail if the sudoku is not valid
+     * @param board
+     * @return true if solve successfully, false otherwise
+     */
+    public boolean solve(int[][] board) {
+    	for (int i = 0; i < Sudoku.LENGTH; i++){
+    		for (int j = 0; j < Sudoku.LENGTH; j++){
+    			// skips if not zero
+    			if (board[i][j] != 0){
+    				continue;
+    			}
+    			// solve sudoku recursively
+    			for (int k = 0; k < Sudoku.LENGTH; k++){
+    				board[i][j] = k + 1;
+    				if (solve(board) && isValid(board, i, j)){
+    					return true;
+    				}
+    				board[i][j] = 0;
+    			}
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+
+    /**
+     * Check the number put is valid
+     * @param board the sudoku board
+     * @param x horizon position of the number 
+     * @param y vertical position of the number
+     * @return true if the move is valid, false otherwise
+     */
+    private boolean isValid(int[][] board, int x, int y){
+    	//Check row
+    	Set<Integer> set = new HashSet<Integer>();
+    	for (int i = 0; i < Sudoku.LENGTH; i++){
+    		if (set.contains(board[x][i])){
+    			return false;
+    		}
+    		
+    		if (board[x][i] >= 1 && board[x][i] <= 9){
+    			set.add(board[x][i]);
+    		}
+    	}
+    	
+    	//Check column
+    	set = new HashSet<Integer>();
+    	for (int i = 0; i < Sudoku.LENGTH; i++){
+    		if (set.contains(board[i][y])){
+    			return false;
+    		}
+    		
+    		if (board[i][y] >= 1 && board[i][y] <= 9){
+    			set.add(board[i][y]);
+    		}
+    	}
+    	
+    	//Check subgrid
+    	set = new HashSet<Integer>();
+    	for (int i = 0; i < 3; i++){
+    		for (int j = 0; j < 3; j++){
+                int row = x / 3 * 3 + i;
+                int column = y / 3 * 3 + j;
+                if (set.contains(board[row][column])){
+                	return false;
+                }
+                if (board[row][column] >= 1 && board[row][column] <= 9){
+                	set.add(board[row][column]);
+                }
+    		}
+    	}
+    	
+    	return true;
+    }
+}

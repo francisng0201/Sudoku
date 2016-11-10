@@ -2,11 +2,17 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DigHoles {
-	Sudoku sudoku = new Sudoku();
 	int numOfHoles;
 	int lowerbound;
+	
+	/**
+	 * Constructor
+	 * @param sudoku the sudoku being dug
+	 * @param difficultly game's difficultly
+	 */
 	public DigHoles(Sudoku sudoku, String difficultly){
-		this.sudoku.setBoard(sudoku.getBoard());
+		// Randomly generate number of holes being dug based on the difficultly
+		// Number of holes being dug are based on the paper http://zhangroup.aporc.org/images/files/Paper_3485.pdf
 		if (difficultly.equals("Easy")){
 			this.numOfHoles = ThreadLocalRandom.current().nextInt(36, 50);
 			lowerbound = 4;
@@ -19,35 +25,40 @@ public class DigHoles {
 			this.numOfHoles = ThreadLocalRandom.current().nextInt(28, 31);
 			lowerbound = 2;
 		}
-		dig(this.sudoku);
 	}
 	
-	public int getNumOfHoles(){
-		System.out.println(numOfHoles);
-		return this.numOfHoles;
-	}
-	
-	public void dig(Sudoku sudoku){
-		sudoku.print();
+	/**
+	 * Dig some holes from the given sudoku based on the difficultly
+	 * @param sudoku
+	 */
+	public void dig(Sudoku sudoku){		
 		int[][] board = sudoku.getBoard();
 		int nonEmptyCells = 81;
+		
+		// Keep digging until condition is met
 		while (nonEmptyCells > numOfHoles){
 			Random xRand = new Random();
 			int x = xRand.nextInt(Sudoku.LENGTH);
 			Random yRand = new Random();
 			int y = yRand.nextInt(Sudoku.LENGTH);
-			if (lowerbound < numOfNonEmptyinRow(board, x) && lowerbound < numOfNonEmptyinColumn(board, y) && board[x][y] != 0){
+			
+			// Check if the cell being dug is valid
+			if (lowerbound < numOfNonEmptyinRow(board, x) && lowerbound < numOfNonEmptyinColumn(board, y) &&  
+				lowerbound < numOfNonEmptyinSubGrid(board, x, y) && board[x][y] != 0){
 				board[x][y] = 0;
+				sudoku.setCanPut(x, y);
 				nonEmptyCells--;
 			}
 		}
-		sudoku.setBoard(board);
-		sudoku.print();
-		Solver s = new Solver();
-		s.solveSudoku(sudoku);
-		sudoku.print();
+		System.out.println("Number of Empty cells: " + (81 - nonEmptyCells));
 	}
 	
+	/**
+	 * Helper function to check number of non empty cells in one row
+	 * @param board
+	 * @param row
+	 * @return number of non empty cells
+	 */
 	public int numOfNonEmptyinRow(int[][] board, int row){
 		int count = 0;
 		for (int i = 0; i < Sudoku.LENGTH; i++){
@@ -58,6 +69,12 @@ public class DigHoles {
 		return count;
 	}
 	
+	/**
+	 * Helper function to check number of non empty cells in one column
+	 * @param board
+	 * @param col
+	 * @return number of non empty cells
+	 */
 	public int numOfNonEmptyinColumn(int[][] board, int col){
 		int count = 0;
 		for (int i = 0; i < Sudoku.LENGTH; i++){
@@ -68,9 +85,25 @@ public class DigHoles {
 		return count;
 	}
 	
-	public static void main(String[] args){
-		Sudoku sudoku = new Sudoku();
-		sudoku.generate();
-		DigHoles dh = new DigHoles(sudoku, "Easy");
+	/**
+	 * Helper function to check number of non empty cells in one sub grid
+	 * @param board
+	 * @param row
+	 * @param col
+	 * @return number of non empty cells
+	 */
+	public int numOfNonEmptyinSubGrid(int[][] board, int row, int col){
+    	int count = 0;
+		for (int i = 0; i < 3; i++){
+    		for (int j = 0; j < 3; j++){
+                int m = row / 3 * 3 + i;
+                int n = col / 3 * 3 + j;
+                if (board[m][n] != 0){
+                	count++;
+                }
+    		}
+    	}
+		return count;
 	}
+
 }

@@ -10,9 +10,7 @@ public class Solver {
     	int[][] board = sudoku.getBoard();
         sudoku.print();
 
-    	System.out.println("solving");
         solve(board);
-        System.out.println("done");
         sudoku.setBoard(board);
     }
     

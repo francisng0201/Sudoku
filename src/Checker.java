@@ -57,43 +57,40 @@ public class Checker {
 	}
 	
 	/**
-	 * Check if a given row in sudoku is valid, i.e. no duplicate value
-	 * @param board
-	 * @param row
-	 * @return true if valid, false otherwise
-	 */
-	protected boolean checkRow(int[][] board, int row){
-		if (row < 1 || row > 8){
-			System.out.println("invalid row");
-			return false;
-		}
-		
-		for (int i = 0; i < Sudoku.LENGTH; i++){
-			for (int j = i + 1; j < Sudoku.LENGTH; j++){
-				if (i != j && board[row][i] == board[row][j]){
-					return false;
-				}
-			}
-			System.out.println();
-		}
-		return true;
-	}
-	
-	/**
 	 * Check if a given column in sudoku is valid, i.e. no duplicate value
 	 * @param board
 	 * @param row
 	 * @return true if valid, false otherwise
 	 */
-	protected boolean checkColumn(int[][] board, int column){
-		if (column < 1 || column > 8){
-			System.out.println("invalid column");
+	protected boolean checkColumn(int[][] board, int row){
+		if (row < 0 || row > 8){
 			return false;
 		}
 		
 		for (int i = 0; i < Sudoku.LENGTH; i++){
 			for (int j = i + 1; j < Sudoku.LENGTH; j++){
-				if (i != j && board[i][column] == board[j][column]){
+				if (i != j && board[row][i] == board[row][j] && board[row][i] != 0){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Check if a given row in sudoku is valid, i.e. no duplicate value
+	 * @param board
+	 * @param row
+	 * @return true if valid, false otherwise
+	 */
+	protected boolean checkRow(int[][] board, int column){
+		if (column < 0 || column > 8){
+			return false;
+		}
+		
+		for (int i = 0; i < Sudoku.LENGTH; i++){
+			for (int j = i + 1; j < Sudoku.LENGTH; j++){
+				if (i != j && board[i][column] == board[j][column] && board[i][column] != 0){
 					return false;
 				}
 			}
@@ -108,8 +105,7 @@ public class Checker {
 	 * @return true if valid, false otherwise
 	 */
 	protected boolean checkSubGrid(int[][] board, int row, int column){
-		if (row < 1 || row > 8 || column < 1 || column > 8){
-			System.out.println("invalid row or column");
+		if (row < 0 || row > 8 || column < 0 || column > 8){
 			return false;
 		}
 		
@@ -124,7 +120,7 @@ public class Checker {
 
 		for (int i = 0; i < Sudoku.LENGTH; i++){
 			for (int j = i + 1; j < Sudoku.LENGTH; j++){
-				if (i != j && oneGrid[i] == oneGrid[j]){
+				if (i != j && oneGrid[i] == oneGrid[j] && oneGrid[i] != 0){
 					return false;
 				}
 			}
