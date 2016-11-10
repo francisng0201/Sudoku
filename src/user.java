@@ -1,18 +1,31 @@
 import java.util.ArrayList;
 
-public class user {
+public class User {
 	String name;
+	String password;
 	ArrayList<Long> time = new ArrayList<Long>();
-	//points
-	//whoever solves the most
-	//get a hint?
+	int score;
+	int hints;
 	
 	/**
 	 * user constructor
 	 * @param name user's name
 	 */
-	public user(String name){
+	public User(String name, String password){
 		this.name = name;
+		this.password = password;
+		this.score = 0;
+		this.hints = 3;
+	}
+	
+	/**
+	 * user constructor
+	 */
+	public User(String name, String password, int score, int hints){
+		this.name = name;
+		this.password = password;
+		this.score = score;
+		this.hints = hints;
 	}
 	
 	/**
@@ -32,11 +45,66 @@ public class user {
 	}
 	
 	/**
+	 * get the user's password
+	 * @return
+	 */
+	public String getPassword(){
+		return this.password;
+	}
+	
+	/**
+	 * update user's password
+	 * @param password
+	 */
+	public void setPassword(String password){
+		this.password = password;
+	}
+	
+	/**
+	 * get the user's current score
+	 * @return
+	 */
+	public int getScore(){
+		return this.score;
+	}
+	
+	/**
+	 * update user's current score
+	 * @param score
+	 */
+	public void setScore(int score){
+		this.score = score;
+	}
+	
+	/**
+	 * get user's number of hints
+	 * @return
+	 */
+	public int getHints(){
+		return this.hints;
+	}
+	
+	/**
+	 * update user's number of hints
+	 * @param hints
+	 */
+	public void setHints(int hints){
+		this.hints = hints;
+	}
+	
+	/**
 	 * return the times being used by the user for all sudoku the user solved
 	 * @return
 	 */
 	public ArrayList<Long> getTime(){
 		return this.time;
+	}
+	
+	/**
+	 * Update database
+	 */
+	public void updateDatabase(){
+		Database.updateDatabase(this.score, this.hints, this.name);
 	}
 	
 	/**
