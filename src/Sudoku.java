@@ -4,9 +4,35 @@ public class Sudoku {
 	
 	public static final int LENGTH = 9;
 	private int[][] board;
+	private boolean[][] canPut;
 	
+	/**
+	 * Sudoku constructor
+	 */
 	public Sudoku(){
 		board = new int[LENGTH][LENGTH];
+		canPut = new boolean[LENGTH][LENGTH];
+	}
+	
+	/**
+	 * Sudoku constructor
+	 */
+	public Sudoku(Sudoku sudoku){
+		board = new int[LENGTH][LENGTH];
+		canPut = new boolean[LENGTH][LENGTH];
+		
+		int[][] board = sudoku.getBoard();
+		for (int i = 0; i < LENGTH; i++){
+			for (int j = 0; j < LENGTH; j++){
+				this.board[i][j] = board[i][j];
+			}
+		}
+		
+		for (int i = 0; i < LENGTH; i++){
+			for (int j = 0; j < LENGTH; j++){
+				this.canPut[i][j] = sudoku.getCanPut(i, j);
+			}
+		}
 	}
 	
 	/**
@@ -14,6 +40,11 @@ public class Sudoku {
 	 */
 	public void generate(){
 		putNumbers(0, 0);
+		for (int i = 0; i < LENGTH; i++){
+			for (int j = 0; j < LENGTH; j++){
+				canPut[i][j] = false;
+			}
+		}
 	}
 	
 	/**
@@ -148,9 +179,35 @@ public class Sudoku {
 		this.board[x][y] = value;
 	}
 	
-	public static void main(String[] args){
-		Sudoku sudoku = new Sudoku();
-		sudoku.generate();
-		sudoku.print();
+	/**
+	 * Set certain cell to "can be put" status
+	 * @param x
+	 * @param y
+	 */
+	public void setCanPut(int x, int y){
+		this.canPut[x][y] = true;
+	}
+	
+	/**
+	 * Helper function for debugging
+	 * Prints the array that shows the cells can be dug or not
+	 */
+	public void printCanPut(){
+		for (int i = 0; i < LENGTH; i++){
+			for (int j = 0; j < LENGTH; j++){
+				System.out.print(canPut[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * get certain cell to check if it can be put a number
+	 * @param x
+	 * @param y
+	 * @return true if it can be; false otherwise
+	 */
+	public boolean getCanPut(int x, int y){
+		return this.canPut[x][y];
 	}
 }

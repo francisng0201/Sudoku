@@ -15,7 +15,6 @@ public class Database{
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:sudoku.db");
 			connection.setAutoCommit(false);
-			System.out.println("Opened database successfully");
 
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM USER;");
@@ -28,7 +27,6 @@ public class Database{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("Operation done successfully");
 	}
 
 	/**
@@ -42,7 +40,6 @@ public class Database{
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:sudoku.db");
 			connection.setAutoCommit(false);
-			System.out.println("Opened database successfully");
 
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "';");
@@ -55,7 +52,6 @@ public class Database{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("Operation done successfully");		
 	}
 	
 	/**
@@ -63,16 +59,21 @@ public class Database{
 	 * @param username
 	 * @param password
 	 */
-	public static void writeDatabase(String username, String password) {
+	public static boolean writeDatabase(String username, String password) {
 		Connection connection = null;
 		Statement stmt = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:sudoku.db");
 			connection.setAutoCommit(false);
-			System.out.println("Opened database successfully");
 
 			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "';");
+			if (rs.next()){
+				stmt.close();
+				connection.close();
+				return false;
+			}
 			String sql = "INSERT OR REPLACE INTO USER (NAME, PASSWORD) " + "VALUES ('" + username + "', '" + password + "');";
 
 			stmt.executeUpdate(sql);
@@ -83,24 +84,23 @@ public class Database{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("Records created successfully");
-
+		System.out.println("sign up successfully");
+		return true;
 	}
 
 	/**
 	 * udpate a user's score and number of hints
 	 */
-	public static void updateDatabase(int newScore, int newHint, int id) {
+	public static void updateDatabase(int newScore, int newHint, String username) {
 		Connection connection = null;
 		Statement stmt = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:sudoku.db");
 			connection.setAutoCommit(false);
-			System.out.println("Opened database successfully");
 
 			stmt = connection.createStatement();
-			String sql = "UPDATE USER SET SCORE = " + newScore + ", HINTS = " + newHint + " WHERE ID = " + id + ";";
+			String sql = "UPDATE USER SET SCORE = " + newScore + ", HINTS = " + newHint + " WHERE NAME = '" + username + "';";
 			stmt.executeUpdate(sql);
 			connection.commit();
 
@@ -113,7 +113,6 @@ public class Database{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("Operation done successfully");
 	}
 
 	/**
@@ -127,7 +126,6 @@ public class Database{
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:sudoku.db");
 			connection.setAutoCommit(false);
-			System.out.println("Opened database successfully");
 
 			stmt = connection.createStatement();
 			String sql = "DELETE FROM USER WHERE NAME = " + username + ";";
@@ -144,7 +142,41 @@ public class Database{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("Operation done successfully");
+		System.out.println("delete done successfully");
+	}
+	
+	public static User findUser(String username, String password){
+		Connection connection = null;
+		Statement stmt = null;
+		int score = 0;
+		int hints = 0;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			connection = DriverManager.getConnection("jdbc:sqlite:sudoku.db");
+			connection.setAutoCommit(false);
+
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "' AND PASSWORD = '"+ password + "';");
+			if (!rs.next()){
+				System.out.println("what");
+				stmt.close();
+				connection.close();
+				return null;
+			}
+			
+			score = rs.getInt("score");
+			hints = rs.getInt("hints");
+			
+			stmt.close();
+			connection.commit();
+			connection.close();
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		System.out.println("Login successfully");
+		
+		return new User(username, password, score, hints);		
 	}
 	
 	/**

@@ -1,0 +1,45 @@
+import java.util.Scanner;
+
+public class Game {
+	public static void main(String[] args){
+		Scanner reader = new Scanner(System.in); 
+		System.out.println("Welcome! Please enter your username and password: ");
+		System.out.print("username: ");
+		String username = reader.next();
+		System.out.print("password: ");
+		String password = reader.next();
+		User user = new User(username, password);
+		//Database.writeDatabase(username, password);
+		System.out.println("registered");
+		
+		int input = 0;
+		while (input != 4){
+			System.out.println("Hello " + username + ", what do you want to do?");
+			System.out.println("(1) Play Sudoku");
+			System.out.println("(2) Show score");
+			System.out.println("(3) Show number of hints");
+			System.out.println("(4) exit");
+			System.out.println("Please choose one:");
+			input = reader.nextInt();
+			if (input == 1){
+				play();
+			}
+			else if (input == 2){
+				System.out.println("Your score is: " + user.getScore());
+			}
+			else if (input == 3){
+				System.out.println("You have " + user.getHints() + " hints so far");
+			}
+			else{
+				System.out.println("Goodbye!");
+			}
+			System.out.println();
+		}
+	}
+	
+	public static void play(){
+		//Sudoku sudoku = new Sudoku();
+		//sudoku.generate();
+		//sudoku.print();
+	}
+}
