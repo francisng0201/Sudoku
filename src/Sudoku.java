@@ -12,7 +12,6 @@ public class Sudoku {
 	public Sudoku(){
 		board = new int[LENGTH][LENGTH];
 		canPut = new boolean[LENGTH][LENGTH];
-<<<<<<< HEAD
 	}
 	
 	/**
@@ -34,8 +33,6 @@ public class Sudoku {
 				this.canPut[i][j] = sudoku.getCanPut(i, j);
 			}
 		}
-=======
->>>>>>> origin/master
 	}
 	
 	/**
