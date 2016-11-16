@@ -1,13 +1,10 @@
 import java.util.*;
 
 public class Game {
-<<<<<<< HEAD
 	static Sudoku resumeSudoku;
 	static int[][] resumeOriginalBoard;
 	static Stack<int[]> resumeStack;
 
-=======
->>>>>>> origin/master
 	public static void main(String[] args) {
 		Scanner reader = new Scanner(System.in);
 		int input = 0;
@@ -38,22 +35,15 @@ public class Game {
 		while (input != 4) {
 			System.out.println("Hello " + username + ", what do you want to do?");
 			System.out.println("(1) Play Sudoku");
-<<<<<<< HEAD
 			System.out.println("(2) Resume");
 			System.out.println("(3) Show score");
 			System.out.println("(4) Show number of hints");
 			System.out.println("(5) exit");
-=======
-			System.out.println("(2) Show score");
-			System.out.println("(3) Show number of hints");
-			System.out.println("(4) exit");
->>>>>>> origin/master
 			System.out.println("Please choose one:");
 			input = reader.nextInt();
 			if (input == 1) {
 				play(user);
 			} else if (input == 2) {
-<<<<<<< HEAD
 				if (resumeSudoku != null) {
 					gameLoop(resumeSudoku, resumeOriginalBoard, user, resumeStack);
 				} else {
@@ -64,12 +54,6 @@ public class Game {
 			} else if (input == 4) {
 				System.out.println("You have " + user.getHints() + " hints so far");
 			} else if (input == 5) {
-=======
-				System.out.println("Your score is: " + user.getScore());
-			} else if (input == 3) {
-				System.out.println("You have " + user.getHints() + " hints so far");
-			} else if (input == 4) {
->>>>>>> origin/master
 				System.out.println("Goodbye!");
 			} else {
 				System.out.println("Invalid! Please choose again");
@@ -90,10 +74,7 @@ public class Game {
 		Sudoku sudoku = new Sudoku();
 		int input = 0;
 
-<<<<<<< HEAD
 		// choose difficulty
-=======
->>>>>>> origin/master
 		while (input != 1 && input != 2 && input != 3) {
 			System.out.println("Please choose difficulty: ");
 			System.out.println("(1) Easy");
@@ -115,10 +96,7 @@ public class Game {
 			}
 		}
 
-<<<<<<< HEAD
 		// generate sudoku and dig holes
-=======
->>>>>>> origin/master
 		sudoku.generate();
 		int[][] board = sudoku.getBoard();
 		int[][] originalBoard = new int[board.length][];
@@ -128,7 +106,6 @@ public class Game {
 		DigHoles dh = new DigHoles(sudoku, difficultly);
 		dh.dig(sudoku);
 
-<<<<<<< HEAD
 		// use a 2d array to store dug sudoku for restart
 		int[][] restart = new int[board.length][];
 		for (int i = 0; i < board.length; i++) {
@@ -170,18 +147,11 @@ public class Game {
 			resumeStack = null;
 
 			// update score
-=======
-		boolean win = gameLoop(sudoku, originalBoard);
-		if (win) {
->>>>>>> origin/master
 			int currentScore = user.getScore();
 			user.setScore(currentScore + 1);
 			System.out.println("Your score is: " + user.getScore());
 
-<<<<<<< HEAD
 			// update hints if possible
-=======
->>>>>>> origin/master
 			if (user.getScore() > currentScore && user.getScore() % 3 == 0) {
 				user.setHints(user.getHints() + 1);
 				System.out.println("Congratulations! you have unlocked a new hint!");
@@ -196,7 +166,6 @@ public class Game {
 	 * 
 	 * @param sudoku
 	 * @param originalBoard
-<<<<<<< HEAD
 	 * @param stack
 	 *            save the position in order to revert
 	 * @return 0 if the user successfully finishes the game; 1 if the user
@@ -210,20 +179,10 @@ public class Game {
 		String input = "";
 
 		// dont stop until user finishes the board/forfeit/restart/pause
-=======
-	 * @return true if the game finishes successfully, false otherwise
-	 */
-	public static boolean gameLoop(Sudoku sudoku, int[][] originalBoard) {
-		Scanner reader = new Scanner(System.in);
-		Checker checker = new Checker();
-		int[][] board = sudoku.getBoard();
-		String input = "";
->>>>>>> origin/master
 		while (!Arrays.deepEquals(board, originalBoard) && !checker.isValidSudoku(sudoku)) {
 			printBoard(board);
 			System.out.println("Please enter a position (x, y) and a number, separate by space: ");
 			System.out.println("or type forfeit to give up.");
-<<<<<<< HEAD
 			System.out.println("you can also type restart to restart the game.");
 			System.out.println("type hint for a hint");
 			System.out.println("type revert to revert");
@@ -269,14 +228,6 @@ public class Game {
 				}
 			}
 
-=======
-			input = reader.nextLine();
-			String[] parts = input.split(" ");
-
-			if (parts.length == 1 && parts[0].equals("forfeit")) {
-				return false;
-			}
->>>>>>> origin/master
 			if (parts.length < 3) {
 				System.out.println("Not enough input! Please enter again: ");
 				System.out.println();
@@ -285,16 +236,12 @@ public class Game {
 			int number = Integer.parseInt(parts[2]);
 			int x = Integer.parseInt(parts[1]);
 			int y = Integer.parseInt(parts[0]);
-<<<<<<< HEAD
 
 			// check if user input out of range
-=======
->>>>>>> origin/master
 			if (!sudoku.getCanPut(x, y) || x < 0 || x > 8 || y < 0 || y > 8 || number < 0 || number > 9) {
 				System.out.println("Invalid input! Please enter again: ");
 				System.out.println();
 			} else {
-<<<<<<< HEAD
 
 				board[x][y] = number;
 				int[] position = new int[2];
@@ -307,22 +254,12 @@ public class Game {
 					System.out.println("number already exists in the same row/column! Please enter again: ");
 					board[x][y] = 0;
 					stack.pop();
-=======
-				board[x][y] = number;
-				if (!checker.checkColumn(board, x) || !checker.checkRow(board, y)) {
-					System.out.println("number already exists in the same row/column! Please enter again: ");
-					board[x][y] = 0;
->>>>>>> origin/master
 				}
 				System.out.println();
 			}
 		}
 		System.out.println("Congratualtions!");
-<<<<<<< HEAD
 		return 0;
-=======
-		return true;
->>>>>>> origin/master
 	}
 
 	/**
@@ -373,11 +310,8 @@ public class Game {
 		String password = "";
 		boolean success = false;
 		User user = null;
-<<<<<<< HEAD
 
 		// check invalid input
-=======
->>>>>>> origin/master
 		while (!success) {
 			System.out.print("Please enter username: ");
 			username = reader.next();
@@ -404,11 +338,8 @@ public class Game {
 		String username = "";
 		String password = "";
 		boolean success = false;
-<<<<<<< HEAD
 
 		// check invalid input
-=======
->>>>>>> origin/master
 		while (!success) {
 			System.out.print("Please enter username: ");
 			username = reader.next();
@@ -421,7 +352,6 @@ public class Game {
 				success = true;
 			}
 		}
-<<<<<<< HEAD
 
 		return new User(username, password);
 	}
@@ -460,8 +390,4 @@ public class Game {
 		System.out.println("Hints applied. You now have: " + user.getHints());
 		user.updateDatabase();
 	}
-=======
-		return new User(username, password);
-	}
->>>>>>> origin/master
 }
