@@ -62,23 +62,14 @@ public class Checker {
 	 * @param row
 	 * @return true if valid, false otherwise
 	 */
-<<<<<<< HEAD
 	protected boolean checkColumn(int[][] board, int column){
 		if (column < 0 || column > 8){
-=======
-	protected boolean checkColumn(int[][] board, int row){
-		if (row < 0 || row > 8){
->>>>>>> origin/master
 			return false;
 		}
 		
 		for (int i = 0; i < Sudoku.LENGTH; i++){
 			for (int j = i + 1; j < Sudoku.LENGTH; j++){
-<<<<<<< HEAD
 				if (i != j && board[column][i] == board[column][j] && board[column][i] != 0){
-=======
-				if (i != j && board[row][i] == board[row][j] && board[row][i] != 0){
->>>>>>> origin/master
 					return false;
 				}
 			}
@@ -92,23 +83,14 @@ public class Checker {
 	 * @param row
 	 * @return true if valid, false otherwise
 	 */
-<<<<<<< HEAD
 	protected boolean checkRow(int[][] board, int row){
 		if (row < 0 || row > 8){
-=======
-	protected boolean checkRow(int[][] board, int column){
-		if (column < 0 || column > 8){
->>>>>>> origin/master
 			return false;
 		}
 		
 		for (int i = 0; i < Sudoku.LENGTH; i++){
 			for (int j = i + 1; j < Sudoku.LENGTH; j++){
-<<<<<<< HEAD
 				if (i != j && board[i][row] == board[j][row] && board[i][row] != 0){
-=======
-				if (i != j && board[i][column] == board[j][column] && board[i][column] != 0){
->>>>>>> origin/master
 					return false;
 				}
 			}
