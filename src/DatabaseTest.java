@@ -20,7 +20,11 @@ public class DatabaseTest {
 	 */
 	@Test
 	public void testUpdate(){
+<<<<<<< HEAD
 		Database.updateDatabase(12, 7, "Francis");
+=======
+		Database.updateDatabase(10, 7, "Francis");
+>>>>>>> origin/master
 		Database.printOne("Francis");
 		Database.updateDatabase(10, 20, "a");
 		Database.printOne("a");
