@@ -1,9 +1,6 @@
 import java.util.*;
 
 public class Game {
-	static Sudoku resumeSudoku;
-	static int[][] resumeOriginalBoard;
-	static Stack<int[]> resumeStack;
 
 	public static void main(String[] args) {
 		Scanner reader = new Scanner(System.in);
@@ -41,23 +38,36 @@ public class Game {
 			System.out.println("(5) exit");
 			System.out.println("Please choose one:");
 			input = reader.nextInt();
+
 			if (input == 1) {
 				play(user);
+
 			} else if (input == 2) {
-				if (resumeSudoku != null) {
-					gameLoop(resumeSudoku, resumeOriginalBoard, user, resumeStack);
+				// resuming the game from the database
+				Sudoku sudoku = SudokuDatabase.loadSudoku(username);
+				int[][] originalBoard = SudokuDatabase.loadOriginalBoard(username);
+				if (sudoku != null) {
+					int win = gameLoop(sudoku, originalBoard, user, new Stack<int[]>());
+					if (win == 0) {
+						winning(user);
+					}
 				} else {
 					System.out.println("can't resume");
 				}
+
 			} else if (input == 3) {
 				System.out.println("Your score is: " + user.getScore());
+
 			} else if (input == 4) {
 				System.out.println("You have " + user.getHints() + " hints so far");
+
 			} else if (input == 5) {
 				System.out.println("Goodbye!");
+
 			} else {
 				System.out.println("Invalid! Please choose again");
 			}
+
 			System.out.println();
 		}
 	}
@@ -117,48 +127,45 @@ public class Game {
 		// start the game
 		Stack<int[]> stack = new Stack<int[]>();
 
-		long startTime = System.currentTimeMillis();
 		int win = gameLoop(sudoku, originalBoard, user, stack);
 
 		// check if it's restart
 		while (win == 2) {
 			stack = new Stack<int[]>();
 			sudoku.setBoard(restart);
-			startTime = System.currentTimeMillis();
 			win = gameLoop(sudoku, originalBoard, user, stack);
 		}
 
-		System.out.println();
-
-		// if the user pauses
-		if (win == 3) {
-			return;
-		}
-
+		// player wins, print message and update database
 		if (win == 0) {
-			// user finishes the game, print out message
-			long endTime = System.currentTimeMillis();
-			long totalTime = (endTime - startTime) / 1000;
-			System.out.println("your total used:" + totalTime + " second");
-
-			// clear resume variables
-			resumeSudoku = null;
-			resumeOriginalBoard = null;
-			resumeStack = null;
-
-			// update score
-			int currentScore = user.getScore();
-			user.setScore(currentScore + 1);
-			System.out.println("Your score is: " + user.getScore());
-
-			// update hints if possible
-			if (user.getScore() > currentScore && user.getScore() % 3 == 0) {
-				user.setHints(user.getHints() + 1);
-				System.out.println("Congratulations! you have unlocked a new hint!");
-				System.out.println("You now have: " + user.getHints());
-			}
-			user.updateDatabase();
+			winning(user);
 		}
+
+	}
+
+	/**
+	 * print messages if user wins the game as well as updating the database
+	 * 
+	 * @param user
+	 */
+	public static void winning(User user) {
+
+		// clear resume database
+		SudokuDatabase.saveSudoku(user.getName(), null, null);
+
+		// update score
+		int currentScore = user.getScore();
+		user.setScore(currentScore + 1);
+		System.out.println("Your score is: " + user.getScore());
+
+		// update hints if possible
+		if (user.getScore() > currentScore && user.getScore() % 3 == 0) {
+			user.setHints(user.getHints() + 1);
+			System.out.println("Congratulations! you have unlocked a new hint!");
+			System.out.println("You now have: " + user.getHints());
+		}
+		user.updateDatabase();
+
 	}
 
 	/**
@@ -175,7 +182,6 @@ public class Game {
 		Scanner reader = new Scanner(System.in);
 		Checker checker = new Checker();
 		int[][] board = sudoku.getBoard();
-
 		String input = "";
 
 		// dont stop until user finishes the board/forfeit/restart/pause
@@ -206,14 +212,7 @@ public class Game {
 				}
 				if (parts[0].equals("pause")) {
 					// save the information
-					resumeSudoku = new Sudoku(sudoku);
-
-					resumeOriginalBoard = new int[board.length][];
-					for (int i = 0; i < board.length; i++) {
-						resumeOriginalBoard[i] = originalBoard[i].clone();
-					}
-
-					resumeStack = (Stack<int[]>) stack.clone();
+					SudokuDatabase.saveSudoku(user.getName(), sudoku, originalBoard);
 					return 3;
 				}
 				if (parts[0].equals("revert")) {
