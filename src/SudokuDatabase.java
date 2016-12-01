@@ -60,7 +60,6 @@ public class SudokuDatabase {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("write successfully");
 		return true;
 	}
 
@@ -77,7 +76,7 @@ public class SudokuDatabase {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM HISTORY WHERE NAME = '" + username + "';");
 
-			if (!rs.next()) {
+			if (!rs.isBeforeFirst()) {
 				System.out.println("Does not exist!");
 				stmt.close();
 				connection.close();

@@ -1,3 +1,7 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*;
 
 public class Game {
@@ -30,6 +34,9 @@ public class Game {
 
 		// options to play games or show information
 		while (input != 6) {
+
+			utility.haveFriendRequest(user);
+
 			System.out.println("Hello " + username + ", what do you want to do?");
 			System.out.println("(1) Play Sudoku");
 			System.out.println("(2) Resume");
@@ -59,7 +66,7 @@ public class Game {
 			} else if (input == 4) {
 				System.out.println("You have " + user.getHints() + " hints so far");
 			} else if (input == 5) {
-				utility.search();
+				utility.search(user);
 			} else if (input == 6) {
 				System.out.println("Goodbye!");
 			} else {
@@ -69,6 +76,8 @@ public class Game {
 			System.out.println();
 		}
 	}
+
+
 
 	/**
 	 * let user choose difficultly and if the user won; update its score and

@@ -71,7 +71,7 @@ public class Database {
 
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "';");
-			if (rs.next()) {
+			if (rs.isBeforeFirst()) {
 				stmt.close();
 				connection.close();
 				return false;
@@ -108,9 +108,6 @@ public class Database {
 			stmt.executeUpdate(sql);
 			connection.commit();
 
-			ResultSet rs = stmt.executeQuery("SELECT * FROM USER;");
-
-			rs.close();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
@@ -170,7 +167,7 @@ public class Database {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(
 					"SELECT * FROM USER WHERE NAME = '" + username + "' AND PASSWORD = '" + password + "';");
-			if (!rs.next()) {
+			if (!rs.isBeforeFirst()) {
 				stmt.close();
 				connection.close();
 				return null;
@@ -209,15 +206,14 @@ public class Database {
 
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "';");
+			print(rs);
 			
-			if (rs == null) {
-				System.out.println("user does not exist");
+			if (!rs.isBeforeFirst()){
 				stmt.close();
 				connection.close();
 				return false;
 			}
-
-			print(rs);
+			
 			stmt.close();
 			connection.close();
 
@@ -227,6 +223,44 @@ public class Database {
 		}
 		return true;
 	}
+	
+	/**
+	 * find user's id (for search)
+	 * 
+	 * @param username
+	 * @param password
+	 * @return User object
+	 */
+	public static int findUserID(String username) {
+		Connection connection = null;
+		Statement stmt = null;
+		int id = -2;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			connection = DriverManager.getConnection("jdbc:sqlite:sudoku.db");
+			connection.setAutoCommit(false);
+
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT ID FROM USER WHERE NAME = '" + username + "';");
+			
+			if (!rs.isBeforeFirst()){
+				stmt.close();
+				connection.close();
+				return -1;
+			}
+			
+			id = rs.getInt("id");
+			
+			stmt.close();
+			connection.close();
+
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		return id;
+	}
+	
 
 	/**
 	 * Print information

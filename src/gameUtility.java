@@ -30,6 +30,7 @@ public class gameUtility {
 			System.out.println("type revert to revert");
 			System.out.println("type pause to pause");
 			System.out.println("type validate to validate");
+			System.out.println("type solve to solve (demo only)");
 			input = reader.nextLine();
 			String[] parts = input.split(" ");
 
@@ -60,6 +61,11 @@ public class gameUtility {
 				}
 				if (parts[0].equals("validate")) {
 					gameUtility.isValid(board);
+					continue;
+				}
+				if (parts[0].equals("solve")) {
+					Solver solver = new Solver();
+					solver.solveSudoku(sudoku);
 					continue;
 				}
 			}
