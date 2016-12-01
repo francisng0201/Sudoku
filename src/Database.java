@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Database{
+public class Database {
 	/**
 	 * Print all users' information
 	 */
@@ -22,7 +22,7 @@ public class Database{
 			rs.close();
 			stmt.close();
 			connection.close();
-			
+
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
@@ -31,9 +31,10 @@ public class Database{
 
 	/**
 	 * print one user's information
+	 * 
 	 * @param username
 	 */
-	public static void printOne(String username){
+	public static void printOne(String username) {
 		Connection connection = null;
 		Statement stmt = null;
 		try {
@@ -43,19 +44,20 @@ public class Database{
 
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "';");
-			print(rs);		
+			print(rs);
 			rs.close();
 			stmt.close();
 			connection.close();
-			
+
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
 	}
-	
+
 	/**
 	 * insert new user to database
+	 * 
 	 * @param username
 	 * @param password
 	 */
@@ -69,12 +71,13 @@ public class Database{
 
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "';");
-			if (rs.next()){
+			if (rs.next()) {
 				stmt.close();
 				connection.close();
 				return false;
 			}
-			String sql = "INSERT OR REPLACE INTO USER (NAME, PASSWORD) " + "VALUES ('" + username + "', '" + password + "');";
+			String sql = "INSERT OR REPLACE INTO USER (NAME, PASSWORD) " + "VALUES ('" + username + "', '" + password
+					+ "');";
 
 			stmt.executeUpdate(sql);
 			stmt.close();
@@ -100,7 +103,8 @@ public class Database{
 			connection.setAutoCommit(false);
 
 			stmt = connection.createStatement();
-			String sql = "UPDATE USER SET SCORE = " + newScore + ", HINTS = " + newHint + " WHERE NAME = '" + username + "';";
+			String sql = "UPDATE USER SET SCORE = " + newScore + ", HINTS = " + newHint + " WHERE NAME = '" + username
+					+ "';";
 			stmt.executeUpdate(sql);
 			connection.commit();
 
@@ -117,6 +121,7 @@ public class Database{
 
 	/**
 	 * delete a user
+	 * 
 	 * @param username
 	 */
 	public static void delete(String username) {
@@ -144,8 +149,15 @@ public class Database{
 		}
 		System.out.println("delete done successfully");
 	}
-	
-	public static User findUser(String username, String password){
+
+	/**
+	 * see if the user exists in the database (for login)
+	 * 
+	 * @param username
+	 * @param password
+	 * @return User object
+	 */
+	public static User findUser(String username, String password) {
 		Connection connection = null;
 		Statement stmt = null;
 		int score = 0;
@@ -156,17 +168,17 @@ public class Database{
 			connection.setAutoCommit(false);
 
 			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "' AND PASSWORD = '"+ password + "';");
-			if (!rs.next()){
-				System.out.println("what");
+			ResultSet rs = stmt.executeQuery(
+					"SELECT * FROM USER WHERE NAME = '" + username + "' AND PASSWORD = '" + password + "';");
+			if (!rs.next()) {
 				stmt.close();
 				connection.close();
 				return null;
 			}
-			
+
 			score = rs.getInt("score");
 			hints = rs.getInt("hints");
-			
+
 			stmt.close();
 			connection.commit();
 			connection.close();
@@ -175,16 +187,55 @@ public class Database{
 			System.exit(0);
 		}
 		System.out.println("Login successfully");
-		
-		return new User(username, password, score, hints);		
+
+		return new User(username, password, score, hints);
 	}
-	
+
+	/**
+	 * see if the user exists in the database (for search)
+	 * 
+	 * @param username
+	 * @param password
+	 * @return User object
+	 */
+	public static boolean findUser(String username) {
+		Connection connection = null;
+		Statement stmt = null;
+
+		try {
+			Class.forName("org.sqlite.JDBC");
+			connection = DriverManager.getConnection("jdbc:sqlite:sudoku.db");
+			connection.setAutoCommit(false);
+
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM USER WHERE NAME = '" + username + "';");
+			
+			if (rs == null) {
+				System.out.println("user does not exist");
+				stmt.close();
+				connection.close();
+				return false;
+			}
+
+			print(rs);
+			stmt.close();
+			connection.close();
+
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		return true;
+	}
+
 	/**
 	 * Print information
+	 * 
 	 * @param rs
 	 * @throws SQLException
 	 */
-	public static void print(ResultSet rs) throws SQLException{
+	public static void print(ResultSet rs) throws SQLException {
+
 		while (rs.next()) {
 			String name = rs.getString("name");
 			int score = rs.getInt("score");
