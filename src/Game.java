@@ -50,17 +50,7 @@ public class Game {
 			if (input == 1) {
 				play(user);
 			} else if (input == 2) {
-				// resuming the game from the database
-				Sudoku sudoku = SudokuDatabase.loadSudoku(username);
-				int[][] originalBoard = SudokuDatabase.loadOriginalBoard(username);
-				if (sudoku != null) {
-					int win = gameUtility.gameLoop(sudoku, originalBoard, user, new Stack<int[]>());
-					if (win == 0) {
-						utility.winning(user);
-					}
-				} else {
-					System.out.println("can't resume");
-				}
+				resume(user);
 			} else if (input == 3) {
 				System.out.println("Your score is: " + user.getScore());
 			} else if (input == 4) {
@@ -76,8 +66,37 @@ public class Game {
 			System.out.println();
 		}
 	}
+	
+	/**
+	 * Resume game
+	 * @param user
+	 */
+	public static void resume(User user){
+		// resuming the game from the database
+		String username = user.getName();
+		Sudoku sudoku = SudokuDatabase.loadSudoku(username);
 
+		boolean isEmpty = true;
 
+		for (int i = 0; i < Sudoku.LENGTH; i++) {
+			for (int j = 0; j < Sudoku.LENGTH; j++) {
+				if (sudoku.getBoard()[i][j] != 0) {
+					isEmpty = false;
+				}
+			}
+		}
+
+		if (!isEmpty) {
+			int[][] originalBoard = SudokuDatabase.loadOriginalBoard(username);
+			int win = gameUtility.gameLoop(sudoku, originalBoard, user, new Stack<int[]>());
+			if (win == 0) {
+				utility.winning(user);
+			}
+		} else {
+			System.out.println("can't resume");
+		}
+	}
+	
 
 	/**
 	 * let user choose difficultly and if the user won; update its score and
