@@ -55,6 +55,14 @@ public class DigHoles {
 	private int digRandomly(Sudoku sudoku) {
 		int[][] board = sudoku.getBoard();
 		int nonEmptyCells = 81;
+		Solver solver = new Solver();
+		int[][] validate = new int[board.length][];
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				validate[i] = board[i].clone();
+			}
+		}
+		
 		// Keep digging until condition is met
 		while (nonEmptyCells > numGiven) {
 			Random xRand = new Random();
@@ -63,8 +71,9 @@ public class DigHoles {
 			int y = yRand.nextInt(Sudoku.LENGTH);
 
 			// Check if the cell being dug is valid
+			
 			if (lowerbound < numOfNonEmptyinRow(board, x) && lowerbound < numOfNonEmptyinColumn(board, y)
-					&& lowerbound < numOfNonEmptyinSubGrid(board, x, y) && board[x][y] != 0) {
+					&& lowerbound < numOfNonEmptyinSubGrid(board, x, y) && board[x][y] != 0 && solver.solve(validate)) {
 				board[x][y] = 0;
 				sudoku.setCanPut(x, y);
 				nonEmptyCells--;
@@ -81,14 +90,26 @@ public class DigHoles {
 	private int digFromTop(Sudoku sudoku) {
 		int[][] board = sudoku.getBoard();
 		int nonEmptyCells = 81;
+		Solver solver = new Solver();
+		int[][] validate = new int[board.length][];
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				validate[i] = board[i].clone();
+			}
+		}
+		
+		// start digging from the top
 		while (nonEmptyCells > numGiven) {
 			for (int i = 0; i < Sudoku.LENGTH; i++) {
 				for (int j = 0; j < Sudoku.LENGTH; j++) {
 					if (lowerbound < numOfNonEmptyinRow(board, i) && lowerbound < numOfNonEmptyinColumn(board, j)
-							&& lowerbound < numOfNonEmptyinSubGrid(board, i, j) && board[i][j] != 0) {
+							&& lowerbound < numOfNonEmptyinSubGrid(board, i, j) && board[i][j] != 0 && solver.solve(validate)) {
 						board[i][j] = 0;
 						sudoku.setCanPut(i, j);
 						nonEmptyCells--;
+					}
+					if (nonEmptyCells <= numGiven){
+						break;
 					}
 				}
 			}

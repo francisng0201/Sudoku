@@ -6,6 +6,8 @@ public class Sudoku {
 	private int[][] board;
 	private boolean[][] canPut;
 	
+	
+	
 	/**
 	 * Sudoku constructor
 	 */
